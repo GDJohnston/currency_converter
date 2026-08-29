@@ -1,24 +1,20 @@
-use std::fs;
+use std::{fs, path::PathBuf};
 use serde::Deserialize;
 use toml;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub api: ApiConfig,
-    pub _data: Option<DataConfig>,
+    pub cache_data_folder: PathBuf,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct ApiConfig {
-    pub key : String,
+    pub website: String,
+    pub key_file: PathBuf,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct DataConfig {
-    pub _refresh_secs: u32,
-}
-
-pub fn get_config(config_file: &str) -> Config {
+pub fn from(config_file: &str) -> Config {
     let content = fs::read_to_string(config_file).unwrap();
     toml::from_str(&content).unwrap()
 }

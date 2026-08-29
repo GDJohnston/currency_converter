@@ -1,0 +1,5 @@
+cache_data_folder = "./currency_converter_data"
+
+[api]
+website = "https://v6.exchangerate-api.com/v6/"
+key_file = "./api_key"
