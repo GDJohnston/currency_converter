@@ -18,7 +18,11 @@
             "args": [
                 "--",
                 "--base",
-                "USD"
+                "USD",
+                "--target",
+                "GBP",
+                "--units",
+                "5"
                 ]
         },
         {

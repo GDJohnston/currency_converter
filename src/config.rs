@@ -2,16 +2,12 @@ use std::{fs, path::PathBuf};
 use serde::Deserialize;
 use toml;
 
-#[derive(Debug, Deserialize)]
-pub struct Config {
-    pub api: ApiConfig,
-    pub cache_data_folder: PathBuf,
-}
+use crate::cache_config;
 
 #[derive(Debug, Deserialize)]
-pub struct ApiConfig {
-    pub website: String,
-    pub key_file: PathBuf,
+pub struct Config {
+    pub api_key_file: PathBuf,
+    pub cache: cache_config::CacheConfig,
 }
 
 pub fn from(config_file: &str) -> Config {

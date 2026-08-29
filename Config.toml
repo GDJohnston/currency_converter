@@ -1,5 +1,5 @@
-cache_data_folder = "./currency_converter_data"
+api_key_file = "./api_key"
 
-[api]
-website = "https://v6.exchangerate-api.com/v6/"
-key_file = "./api_key"
+[cache]
+folder = "./currency_converter/data"
+refresh_rate_secs = 60
