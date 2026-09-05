@@ -1,5 +1,5 @@
 use serde::{Serialize,Deserialize};
-use serde_json;
+use serde_json::{self, Map, Value};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct RatesBody {
@@ -9,7 +9,7 @@ pub(crate) struct RatesBody {
     pub(crate) time_next_update_unix: u32,
     pub(crate) time_next_update_utc: String,
     pub(crate) base_code: String,
-    pub(crate) conversion_rates: serde_json::Map<String, serde_json::Value>,
+    pub(crate) conversion_rates: Map<String, Value>,
 }
 
 impl RatesBody {
