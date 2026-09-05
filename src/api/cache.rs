@@ -1,22 +1,22 @@
 use std::{
     fs::{self, File}, io::{Read, Write}, path::PathBuf, time::{Duration, SystemTime}
 };
-use super::api_response::Rates;
-use cache_config::CacheConfig;
+use super::response::Rates;
+use config::Config;
 
-pub(crate) mod cache_config;
+pub(crate) mod config;
 
 pub(crate) struct Cache {
-    config: CacheConfig,
+    config: Config,
 }
 
 impl Cache {
-    pub(crate) fn new(config: &CacheConfig) -> Self {
+    pub(crate) fn new(config: &Config) -> Self {
         Self { config: config.clone() }
     }
 
     pub(crate) fn read_from_cache(&self, basecode: &str) -> Option<Rates> {
-        let CacheConfig { folder, refresh_rate_secs: config_refresh_rate } = &self.config;
+        let Config { folder, refresh_rate_secs: config_refresh_rate } = &self.config;
         let cache_file = folder.join(basecode);
         let mut file = match File::open(cache_file) {
             Ok(f) => f,
@@ -33,7 +33,7 @@ impl Cache {
 
         let api_refresh = 
             SystemTime::UNIX_EPOCH + Duration::from_secs(time_next_update_unix as u64);
-        
+
         let next_update = match config_refresh_rate {
             None => api_refresh,
             Some(refresh) => 

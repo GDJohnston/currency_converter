@@ -1,10 +1,10 @@
 use std::path::Path;
 
-use api_response::{Error, Rates};
+use response::{Error, Rates};
 use cache::Cache;
 
-pub(crate) mod api_key;
-pub(crate) mod api_response;
+pub(crate) mod key;
+pub(crate) mod response;
 pub(crate) mod cache;
 pub(crate) mod config;
 
@@ -17,7 +17,7 @@ impl Api {
     pub(crate) fn new(config_file: &Path) -> Self {
     let config = config::from(config_file);
         Api { 
-            key: api_key::from_file(&config.api_key_file),
+            key: key::from_file(&config.api_key_file),
             cache: Cache::new(&config.cache)
         }
     }
@@ -46,7 +46,7 @@ impl Api {
         let uri = format!("https://v6.exchangerate-api.com/v6/{apikey}/latest/{basecode}");
         let response = reqwest::get(uri).await.unwrap();
 
-        api_response::parse(response).await
+        response::parse(response).await
     }
 
     pub(crate) fn display_error(error: Error) {
