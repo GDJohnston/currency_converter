@@ -4,16 +4,16 @@ use clap::Parser;
 #[command(version)]
 pub(crate) struct Args {
     /// Currency to convert from
-    #[arg(short, long, value_name = "BASECODE")]
+    #[arg(value_name = "basecode")]
     pub(crate) base: String,
 
 
     /// Currency to convert to
-    #[arg(short, long, value_name = "TARGETCODE", default_value_t = String::new())]
+    #[arg(value_name = "targetcode", default_value_t = String::new())]
     pub(crate) target: String,
 
     /// Units to convert
-    #[arg(short, long, default_value_t = 1.00)]
+    #[arg(value_name = "units", default_value_t = 1.00)]
     pub(crate) units: f64,
 }
 
