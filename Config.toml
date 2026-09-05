@@ -2,4 +2,4 @@ api_key_file = "./api_key"
 
 [cache]
 folder = "./currency_converter/data"
-refresh_rate_secs = 60
+refresh_rate_secs = 86400
