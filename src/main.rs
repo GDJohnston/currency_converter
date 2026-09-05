@@ -1,8 +1,7 @@
+use std::path::Path;
+
 use crate::{api::Api, cli::Args};
 
-mod cache_config;
-mod config;
-mod cache;
 mod cli;
 mod api;
 
@@ -10,9 +9,10 @@ const CONFIG_FILE: &'static str = "./Config.toml";
 
 #[tokio::main]
 async fn main() {
-    let config = config::from(CONFIG_FILE);
-    let Args{ base, target, units } = cli::Args::new();
-    let api = api::Api::new(&config);
+    let config_path = Path::new(CONFIG_FILE);
+    let api = Api::new(&config_path);
+
+    let Args{ base, target, units } = Args::new();
 
     let basecode = base.to_uppercase();
     let response = api.get_rates(&basecode).await;

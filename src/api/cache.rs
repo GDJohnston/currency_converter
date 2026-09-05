@@ -1,7 +1,10 @@
 use std::{
     fs::{self, File}, io::{Read, Write}, path::PathBuf, time::{Duration, SystemTime}
 };
-use crate::{api::api_response::Rates, cache_config::CacheConfig};
+use crate::{api::api_response::Rates};
+use cache_config::CacheConfig;
+
+pub(crate) mod cache_config;
 
 const LATEST_FOLDER: &'static str = "latest";
 

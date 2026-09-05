@@ -1,27 +1,31 @@
-use std::path::PathBuf;
+use std::path::Path;
 
-use crate::{cache::{self, Cache}, config};
+use api_response::{Error, Rates};
+use cache::Cache;
 
 pub(crate) mod api_key;
 pub(crate) mod api_response;
+pub(crate) mod cache;
+pub(crate) mod config;
 
 const WEBSITE: &'static str = "https://v6.exchangerate-api.com/v6/";
 const LATEST_PATH: &'static str = "latest/";
 
 pub(crate) struct Api {
     key: String,
-    cache: cache::Cache,
+    cache: Cache,
 }
 
 impl Api {
-    pub(crate) fn new(config: &config::Config) -> Self {
+    pub(crate) fn new(config_file: &Path) -> Self {
+    let config = config::from(config_file);
         Api { 
             key: api_key::from_file(&config.api_key_file),
             cache: Cache::new(&config.cache)
         }
     }
 
-    pub(crate) async fn get_rates(self, basecode: &str) -> Result<api_response::Rates, api_response::Error> {
+    pub(crate) async fn get_rates(self, basecode: &str) -> Result<Rates, Error> {
         // Check cache for a hit
         let cache_contents = self.cache.read_from_cache(basecode);
         if cache_contents.is_some() {
@@ -39,7 +43,7 @@ impl Api {
         Ok(rates)
     }
 
-    pub(crate) async fn request_rates(&self, basecode: &str) -> Result<api_response::Rates, api_response::Error> {
+    pub(crate) async fn request_rates(&self, basecode: &str) -> Result<Rates, Error> {
         let key = self.key.as_str();
 
         let url: PathBuf = [WEBSITE, key, LATEST_PATH, basecode].iter().collect();
@@ -49,7 +53,7 @@ impl Api {
         api_response::parse(response).await
     }
 
-    pub(crate) fn display_error(error: api_response::Error) {
+    pub(crate) fn display_error(error: Error) {
         println!("{:#?}", error)
     }
 }
