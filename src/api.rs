@@ -8,9 +8,6 @@ pub(crate) mod api_response;
 pub(crate) mod cache;
 pub(crate) mod config;
 
-const WEBSITE: &'static str = "https://v6.exchangerate-api.com/v6/";
-const LATEST_PATH: &'static str = "latest/";
-
 pub(crate) struct Api {
     key: String,
     cache: Cache,
@@ -34,21 +31,20 @@ impl Api {
         };
 
         // Request rates from website
+        println!("Requesting rates from website");
         let rates = self.request_rates(&basecode).await?;
 
         // Stringify and add to cache
         let string = serde_json::to_string(&rates).unwrap();
         self.cache.add_to_cache(&basecode, &string);
-        
+
         Ok(rates)
     }
 
     pub(crate) async fn request_rates(&self, basecode: &str) -> Result<Rates, Error> {
-        let key = self.key.as_str();
-
-        let url: PathBuf = [WEBSITE, key, LATEST_PATH, basecode].iter().collect();
-        let url = url.to_str().unwrap();
-        let response = reqwest::get(url).await.unwrap();
+        let apikey = self.key.as_str();
+        let uri = format!("https://v6.exchangerate-api.com/v6/{apikey}/latest/{basecode}");
+        let response = reqwest::get(uri).await.unwrap();
 
         api_response::parse(response).await
     }
