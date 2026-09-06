@@ -1,3 +1,5 @@
+//! Caching module for storing API responses so calls don't need to be repeated
+
 use std::{
     fs::{self, File}, io::{Read, Write}, path::PathBuf, time::{Duration, SystemTime}
 };
@@ -6,15 +8,23 @@ use config::Config;
 
 pub(crate) mod config;
 
+/// Cache for storing API responses
 pub(crate) struct Cache {
+    // Config for the cache
     config: Config,
 }
 
 impl Cache {
+    /// Create a new Cache instance with provided config
     pub(crate) fn new(config: &Config) -> Self {
         Self { config: config.clone() }
     }
 
+    /// Attempts to read from cache, returns [`Rates`] if a cache hits and is not expired
+    /// else returns [`None`].
+    /// 
+    /// Will also return None if `the last update time + the refresh rate` is less than the current time,
+    /// but if the api hasn't updated then no new data will be retrieved.
     pub(crate) fn read_from_cache(&self, basecode: &str) -> Option<Rates> {
         let Config { folder, refresh_rate_secs: config_refresh_rate } = &self.config;
         let cache_file = folder.join(basecode);
@@ -51,6 +61,9 @@ impl Cache {
         Some(rates)
     }
 
+    /// Adds an entry into the cache.
+    /// 
+    /// Overwrites an exising entry if it exists.
     pub(crate) fn add_to_cache(&self, basecode: &str, data: &str) {
         let cache_folder = PathBuf::from(&self.config.folder);
         let cache_file = cache_folder.join(basecode);

@@ -1,5 +1,8 @@
+//! Command line arguments parsed using clap
+
 use clap::Parser;
 
+/// Comand line argments
 #[derive(Parser)]
 #[command(version)]
 pub(crate) struct Args {
@@ -18,6 +21,7 @@ pub(crate) struct Args {
 }
 
 impl Args {
+    /// Get parsed arguments from the command line
     pub(crate) fn new() -> Self {
         Self::parse()
     }

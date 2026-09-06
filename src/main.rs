@@ -1,3 +1,16 @@
+//! API-based currency converter.
+//! 
+//! Using AYR Tech (Pty) Ltd's [exchangerate-api](https://www.exchangerate-api.com/),
+//! this tool converts from any currency [supported by the api](https://www.exchangerate-api.com/docs/supported-currencies)
+//! to any other supported currency.
+//! The tool also multiplies the conversion if the `units` argument is supplied.
+//! If the `targetcode` argument is not supplied, the tool will report all supported rates for the base currency.
+//! 
+//! This tool uses a caching system that only calls the api if the required data is missing or expired,
+//! saving on the request quota.
+//! 
+//! To use this tool, you need an api key from the exchangerate-api website.
+
 use std::path::Path;
 
 use crate::{api::Api, cli::Args};
@@ -5,6 +18,7 @@ use crate::{api::Api, cli::Args};
 mod cli;
 mod api;
 
+/// File storing the config settings
 const CONFIG_FILE: &'static str = "./Config.toml";
 
 #[tokio::main]
@@ -32,5 +46,8 @@ async fn main() {
         let conversion_rate = rates.conversion_rates[&targetcode].as_f64().unwrap();
         let converted_units = conversion_rate * units;
         println!("{units} {basecode} = {converted_units} {targetcode}");
+    }
+    else {
+        eprintln!("Unknown targetcode: {targetcode}");
     }
 }

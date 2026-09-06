@@ -1,7 +1,11 @@
+//! Handles the key file
+
 use std::{fs, io::Write, path::Path};
 
+/// Hint written to the file when it is first generated
 const API_KEY_HINT: &'static str = "Replace this text with an api key from https://www.exchangerate-api.com/";
 
+/// Read the api key from the provided file
 pub(crate) fn from_file(key_file: &Path) -> String {
     let exists = fs::exists(key_file).expect("Could not confirm the existance of a file, check folder permissions and try again");
     if exists == false {

@@ -1,3 +1,5 @@
+//! Module for requesting exchange rates and caching the result
+
 use std::path::Path;
 
 use response::{Error, Rates};
@@ -8,12 +10,16 @@ pub(crate) mod response;
 pub(crate) mod cache;
 pub(crate) mod config;
 
+/// Holds the api key and the cache for api responses
 pub(crate) struct Api {
+    /// Key for the api
     key: String,
+    /// Cache for the api results
     cache: Cache,
 }
 
 impl Api {
+    /// Generate a API instance with a configuration from the configuration file
     pub(crate) fn new(config_file: &Path) -> Self {
     let config = config::from(config_file);
         Api { 
@@ -22,6 +28,10 @@ impl Api {
         }
     }
 
+    /// Get conversion rates.
+    /// 
+    /// Checks the cache for a valid response and returns if there is a hit,
+    /// otherwise makes an api call and returns that result.
     pub(crate) async fn get_rates(self, basecode: &str) -> Result<Rates, Error> {
         // Check cache for a hit
         let cache_contents = self.cache.read_from_cache(basecode);
@@ -41,6 +51,7 @@ impl Api {
         Ok(rates)
     }
 
+    /// Request the exchange rates for the base currency
     pub(crate) async fn request_rates(&self, basecode: &str) -> Result<Rates, Error> {
         let apikey = self.key.as_str();
         let uri = format!("https://v6.exchangerate-api.com/v6/{apikey}/latest/{basecode}");
@@ -49,6 +60,7 @@ impl Api {
         response::parse(response).await
     }
 
+    /// Formats and displays an error from the website
     pub(crate) fn display_error(error: Error) {
         println!("{:#?}", error)
     }

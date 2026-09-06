@@ -1,6 +1,9 @@
+//! Rates response from the API
+
 use serde::{Serialize,Deserialize};
 use serde_json::{self, Map, Value};
 
+/// Deserialised rates response from API
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct RatesBody {
     pub(crate) result: String,
@@ -13,6 +16,7 @@ pub(crate) struct RatesBody {
 }
 
 impl RatesBody {
+    /// Parse rates response from API into a struct
     pub(crate) fn new(response_body: &String) -> Self {
         serde_json::from_str(&response_body).unwrap()
     }

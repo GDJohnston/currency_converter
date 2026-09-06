@@ -1,3 +1,6 @@
+//! Parsed error type
+
+/// Error type enum
 #[derive(Debug)]
 pub(crate) enum ErrorType {
     UnsupportedCode,
@@ -9,6 +12,7 @@ pub(crate) enum ErrorType {
 }
 
 impl From<String> for ErrorType {
+    /// Convert error from text form to an enum 
     fn from(value: String) -> ErrorType {
         match value.as_str() {
             "unsupported-code" => ErrorType::UnsupportedCode,
