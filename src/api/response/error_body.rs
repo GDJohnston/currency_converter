@@ -25,4 +25,9 @@ impl ErrorBody {
         let error_response: ErrorResponse = response_body.into();
         ErrorBody::from(error_response)
     }
+
+    /// Display the parsed error type
+    pub(crate) fn display(self) {
+        eprintln!("{:#?}", self.error_type);
+    }
 }

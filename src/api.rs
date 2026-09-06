@@ -62,6 +62,6 @@ impl Api {
 
     /// Formats and displays an error from the website
     pub(crate) fn display_error(error: Error) {
-        println!("{:#?}", error)
+        error.display();
     }
 }
