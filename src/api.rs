@@ -2,13 +2,13 @@
 
 use std::path::Path;
 
-use response::{Error, Rates};
 use cache::Cache;
+use response::{Error, Rates};
 
-pub(crate) mod key;
-pub(crate) mod response;
 pub(crate) mod cache;
 pub(crate) mod config;
+pub(crate) mod key;
+pub(crate) mod response;
 
 /// Holds the api key and the cache for api responses
 pub(crate) struct Api {
@@ -21,15 +21,15 @@ pub(crate) struct Api {
 impl Api {
     /// Generate a API instance with a configuration from the configuration file
     pub(crate) fn new(config_file: &Path) -> Self {
-    let config = config::from(config_file);
-        Api { 
+        let config = config::from(config_file);
+        Api {
             key: key::from_file(&config.api_key_file),
-            cache: Cache::new(&config.cache)
+            cache: Cache::new(&config.cache),
         }
     }
 
     /// Get conversion rates.
-    /// 
+    ///
     /// Checks the cache for a valid response and returns if there is a hit,
     /// otherwise makes an api call and returns that result.
     pub(crate) async fn get_rates(self, basecode: &str) -> Result<Rates, Error> {
@@ -37,7 +37,7 @@ impl Api {
         let cache_contents = self.cache.read_from_cache(basecode);
         if cache_contents.is_some() {
             // Return cache contents to caller
-            return Ok(cache_contents.unwrap())
+            return Ok(cache_contents.unwrap());
         };
 
         // Request rates from website

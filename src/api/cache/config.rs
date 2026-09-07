@@ -1,7 +1,7 @@
 //! Config for the cache module
 
-use std::path::PathBuf;
 use serde::Deserialize;
+use std::path::PathBuf;
 
 /// Config for the cache
 #[derive(Clone, Debug, Deserialize)]

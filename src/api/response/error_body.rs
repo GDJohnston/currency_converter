@@ -1,9 +1,9 @@
 //! Error response from API
-use error_type::ErrorType;
 use error_response::ErrorResponse;
+use error_type::ErrorType;
 
-mod error_type;
 mod error_response;
+mod error_type;
 
 /// Parsed error response from API
 #[derive(Debug)]
@@ -15,7 +15,10 @@ pub(crate) struct ErrorBody {
 impl From<ErrorResponse> for ErrorBody {
     /// Parse error error type from the parse error response
     fn from(value: ErrorResponse) -> Self {
-        ErrorBody{error_type: ErrorType::from(value.error_type), result: value.result}
+        ErrorBody {
+            error_type: ErrorType::from(value.error_type),
+            result: value.result,
+        }
     }
 }
 

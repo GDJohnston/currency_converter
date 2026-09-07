@@ -1,6 +1,6 @@
 //! Rates response from the API
 
-use serde::{Serialize,Deserialize};
+use serde::{Deserialize, Serialize};
 use serde_json::{self, Map, Value};
 
 /// Deserialised rates response from API

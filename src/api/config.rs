@@ -1,6 +1,9 @@
 //! Module for processing the config file
-use std::{fs, path::{Path, PathBuf}};
 use serde::Deserialize;
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 use toml;
 
 use super::cache::config::Config as cacheConfig;

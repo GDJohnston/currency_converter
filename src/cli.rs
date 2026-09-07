@@ -10,7 +10,6 @@ pub(crate) struct Args {
     #[arg(value_name = "basecode")]
     pub(crate) base: String,
 
-
     /// Currency to convert to
     #[arg(value_name = "targetcode", default_value_t = String::new())]
     pub(crate) target: String,

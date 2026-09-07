@@ -1,5 +1,5 @@
 //! Parsed error response
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// Serialised API errror response
 #[derive(Debug, Serialize, Deserialize)]
