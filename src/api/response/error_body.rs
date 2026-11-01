@@ -8,7 +8,6 @@ mod error_type;
 /// Parsed error response from API
 #[derive(Debug)]
 pub(crate) struct ErrorBody {
-    result: String,
     error_type: ErrorType,
 }
 
@@ -17,7 +16,6 @@ impl From<ErrorResponse> for ErrorBody {
     fn from(value: ErrorResponse) -> Self {
         ErrorBody {
             error_type: ErrorType::from(value.error_type),
-            result: value.result,
         }
     }
 }
@@ -31,6 +29,10 @@ impl ErrorBody {
 
     /// Display the parsed error type
     pub(crate) fn display(self) {
-        eprintln!("{:#?}", self.error_type);
+        if let ErrorType::Unknown(error) = self.error_type {
+            eprintln!("Unknown error type: {:#?}", error);
+        } else {
+            eprintln!("{:#?}", self.error_type);
+        }
     }
 }
