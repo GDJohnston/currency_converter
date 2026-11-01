@@ -1,15 +1,48 @@
 //! API-based currency converter.
 //!
-//! Using AYR Tech (Pty) Ltd's [exchangerate-api](https://www.exchangerate-api.com/),
-//! this tool converts from any currency [supported by the api](https://www.exchangerate-api.com/docs/supported-currencies)
-//! to any other supported currency.
-//! The tool also multiplies the conversion if the `units` argument is supplied.
-//! If the `targetcode` argument is not supplied, the tool will report all supported rates for the base currency.
+//! This tool convers tool converts between any two [supported currencies], using an api call.
 //!
+//! To use this tool, you need an api key from the [ExchangeRate-API] website.
 //! This tool uses a caching system that only calls the api if the required data is missing or expired,
-//! saving on the request quota.
-//!
-//! To use this tool, you need an api key from the exchangerate-api website.
+//! to reduce request quota usage.
+//! 
+//! [ExchangeRate-API] is a product of AYR Tech (Pty) Ltd.
+//! 
+//! 
+//! [ExchangeRate-API]: https://www.exchangerate-api.com/
+//! [supported currencies]: https://www.exchangerate-api.com/docs/supported-currencies
+//! 
+//! ```bash
+//! $currency_converter
+//! Usage: currency_converter <basecode> [targetcode] [units]
+//! ```
+//! 
+//! # Examples
+//! 
+//! For basic usage supply a `basecode` and a `targetcode`:
+//! 
+//! ```bash
+//! $ currency_converter USD GBP
+//! 1 USD = 0.749 GBP
+//! ```
+//! 
+//! If `units` is provided, the exchange is multiplied by that value:
+//! 
+//! ```bash
+//! $ currency_converter USD GBP 1.5
+//! 1.5 USD = 1.12035 GBP
+//! ```
+//! 
+//! If `targetcode` is omitted, the list of all exchange rates is returned:
+//! 
+//! ```bash
+//! $ currency_converter USD
+//! "USD rates": {
+//! ...
+//!   "GBP": 0.7469,
+//! ...
+//! }
+//! ```
 
 use std::path::Path;
 
@@ -23,15 +56,18 @@ const CONFIG_FILE: &'static str = "./Config.toml";
 
 #[tokio::main]
 async fn main() {
+    // Create a new Api object with the config found in the config file
     let config_path = Path::new(CONFIG_FILE);
     let api = Api::new(&config_path);
 
+    // Pull arguments from the command line
     let Args {
         base,
         target,
         units,
     } = Args::new();
 
+    // Get rates for the basecode
     let basecode = base.to_uppercase();
     let response = api.get_rates(&basecode).await;
     let rates = match response {
@@ -45,7 +81,8 @@ async fn main() {
     let targetcode = target.to_uppercase();
     if targetcode.is_empty() {
         println!(
-            "{}",
+            "\"{} rates\": {}",
+            basecode,
             serde_json::to_string_pretty(&rates.conversion_rates).unwrap()
         );
         return;
